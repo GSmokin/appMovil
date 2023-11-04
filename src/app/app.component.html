@@ -1,0 +1,29 @@
+<ion-app>
+  <ion-split-pane contentId="main">
+    <ion-menu contentId="main" menuId="principal">
+      <ion-header>
+        <ion-toolbar color="tertiary">
+          <ion-title class="subtitulo">Menu</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-menu-toggle>
+        <ion-item button=true detail=true [routerLink]="['/set-productos']">
+          <ion-label class="normal">Configuracion de Productos</ion-label>
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+        </ion-item>
+      </ion-menu-toggle>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main"></ion-router-outlet>
+  
+    <!-- <div class="ion-page" id="main">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Main View</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding"> Main View Content </ion-content>
+    </div> -->
+  </ion-split-pane>
+</ion-app>
