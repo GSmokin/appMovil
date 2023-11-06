@@ -6,7 +6,9 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class FirebaseauthService {
 
-  constructor( public auth:AngularFireAuth) { }
+  constructor( public auth:AngularFireAuth) {
+    this.getUid();
+   }
   
   login(mail: string, password: string){
     return this.auth.createUserWithEmailAndPassword(mail, password)
@@ -29,4 +31,7 @@ export class FirebaseauthService {
     }
   }
 
+  stateAuth(){
+    return this.auth.authState;
+  }
 }

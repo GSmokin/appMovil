@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 import { Cliente } from 'src/app/models';
 import { FirebaseauthService } from 'src/app/services/firebaseauth.service';
 import { FirestorageService } from 'src/app/services/firestorage.service';
@@ -19,24 +20,54 @@ export class PerfilComponent  implements OnInit {
     edad: null,  
     celular: '',
     foto: '',
-  } 
+  }; 
+
+  uid = '';
 
   newFile: any;
+
+  suscriberUserInfo!: Subscription;
+
+  ingresarEnable = false;
 
   constructor(public menucontroler: MenuController,
               public firebaseauthService: FirebaseauthService,
               public firestorageService : FirestorageService,
-              public firestoreService: FirestoreService) { }
+              public firestoreService: FirestoreService) {
+
+                this.firebaseauthService.stateAuth().subscribe(res =>{
+                  console.log(res);
+                  if(res !== null){
+                    this.uid = res.uid;
+                    this.getUserInfo(this.uid);
+                  } else {
+                    this.initCliente();
+                  }
+                })
+               }
 
   async ngOnInit() {
     const uid = await this.firebaseauthService.getUid();
     console.log(uid);
   }
 
+  initCliente(){
+    this.uid = '';
+    this.cliente = {
+      uid: '',
+     nombre: '',
+      email: '',
+      edad: null,  
+      celular: '',
+      foto: '',
+   }; 
+  }
+  
   openMenu() {
     console.log('open menu');
     this.menucontroler.toggle('principal')
   }
+
 
   async newImageUpload(event: any){
     console.log(event);
@@ -88,8 +119,24 @@ export class PerfilComponent  implements OnInit {
 
  salir(){
   this.firebaseauthService.logout;
+  this.suscriberUserInfo.unsubscribe();
  }
 
+ getUserInfo(uid: string){
+    const path = 'Clientes';
+    this.suscriberUserInfo = this.firestoreService.getDoc<Cliente>(path, uid).subscribe( res =>{
+        this.cliente = res;
+    });
+ }
 
+ ingresar(){
+  const credenciales = {
+    mail: this.cliente.email,
+    password: this.cliente.celular,
+  };
+  this.firebaseauthService.login(credenciales.mail, credenciales.password).then(res =>{
+    console.log('ingresado')
+  })
+ }
 
 }
